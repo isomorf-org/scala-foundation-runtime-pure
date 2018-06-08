@@ -12,8 +12,9 @@ libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil
 unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
-   
-    
+
+useGpg := true
+
 // POM settings for Sonatype
 homepage   := Some(url("https://github.com/isomorf-org/scala-foundation-runtime-pure"))
 scmInfo    := Some(ScmInfo(url("https://github.com/isomorf-org/scala-foundation-runtime-pure"),
