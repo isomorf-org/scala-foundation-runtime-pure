@@ -3,7 +3,7 @@ lazy val `foundation-runtime-pure` = (project in file("."))
   
 organization := "org.isomorf"
 name         := "foundation-runtime-pure"
-version      := "0.2.0"
+version      := "0.1.0"
     
 scalaVersion := "2.12.3"
 scalacOptions := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xlint:_", "-Ywarn-unused-import")
