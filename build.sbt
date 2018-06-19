@@ -55,6 +55,8 @@ val publishingSettings = Seq(
     }
   ),
   
+  
+  releaseCrossBuild := true,
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
