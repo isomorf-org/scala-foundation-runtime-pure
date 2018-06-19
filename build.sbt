@@ -29,7 +29,8 @@ val commonSettings = Seq(
 val noPublishingSettings = Seq(
   publish := {},
   publishLocal := {},
-  publishArtifact := false
+  publishArtifact := false,
+  publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 )
 
 val publishingSettings = Seq(
