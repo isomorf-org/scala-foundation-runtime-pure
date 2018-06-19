@@ -18,7 +18,8 @@ lazy val foundationRuntimePure = crossProject(JSPlatform, JVMPlatform)
     
 lazy val foundationRuntimePureJVM = foundationRuntimePure.jvm
 lazy val foundationRuntimePureJS = foundationRuntimePure.js
-  
+
+crossScalaVersions := Seq("2.11.11", "2.12.3")
   
 val commonSettings = Seq(
   organization := "org.isomorf",
