@@ -6,8 +6,7 @@ lazy val root = (project in file("."))
     .settings(
       publish := {},
       publishLocal := {},
-      publishArtifact := false,
-      publishSigned := ()
+      publishArtifact := false
     )
     
 lazy val `cross-project-container` = crossProject.crossType(CrossType.Pure)
@@ -42,7 +41,7 @@ val publishingSettings = Seq(
 
   pomIncludeRepository := { _ => false },
 
-  publishMavenStyle := true,
+  publishMavenStyle := true
 
   
   
