@@ -6,7 +6,8 @@ lazy val root = (project in file("."))
     .settings(
       publish := {},
       publishLocal := {},
-      publishArtifact := false
+      publishArtifact := false,
+      publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
     )
     
 lazy val `cross-project-container` = crossProject.crossType(CrossType.Pure)
