@@ -10,6 +10,7 @@
 .project
 .settings
 bin/
+cross-project-container
 hs_err_pid*.log
 project/project
 project/target
