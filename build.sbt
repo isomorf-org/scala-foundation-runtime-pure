@@ -49,9 +49,20 @@ val publishingSettings = Seq(
 
   pomIncludeRepository := { _ => false },
 
-  publishMavenStyle := true,
+  publishMavenStyle := true
   
-  // Add sonatype repository settings
+  
+  
+  //useGpg := true
+)
+
+val eclipseSettings = Seq(
+  EclipseKeys.withSource := true
+  //,
+  //EclipseKeys.useProjectId := true
+)
+
+// Add sonatype repository settings
   publishTo := Some(
     if (isSnapshot.value) {
       Opts.resolver.sonatypeSnapshots
@@ -59,10 +70,10 @@ val publishingSettings = Seq(
     else {
       Opts.resolver.sonatypeStaging
     }
-  ),
+  )
   
   
-  releaseCrossBuild := true,
+  releaseCrossBuild := true
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
@@ -78,12 +89,3 @@ val publishingSettings = Seq(
     releaseStepCommand("sonatypeReleaseAll"),
     pushChanges
   )
-  
-  //useGpg := true
-)
-
-val eclipseSettings = Seq(
-  EclipseKeys.withSource := true
-  //,
-  //EclipseKeys.useProjectId := true
-)
