@@ -1,11 +1,17 @@
 
+// shadow sbt-scalajs' crossProject and CrossType from Scala.js 0.6.x
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+
+
 import ReleaseTransformations._
 
-lazy val root = (project in file("."))
-    .aggregate(`foundation-runtime-pure`, foundationRuntimePureJS)
-    .settings(noPublishingSettings: _*)
+//lazy val root = (project in file("."))
+//    .aggregate(`foundation-runtime-pure`, foundationRuntimePureJS)
+//    .settings(noPublishingSettings: _*)
     
-lazy val `cross-project-container` = crossProject.crossType(CrossType.Pure)
+lazy val foundationRuntimePure = crossProject(JSPlatform, JVMPlatform)
+    .withoutSuffixFor(JVMPlatform)
+    .crossType(CrossType.Pure)
     .settings(commonSettings: _*)
     .settings(publishingSettings: _*)
     .jvmSettings(eclipseSettings: _*)
@@ -13,8 +19,8 @@ lazy val `cross-project-container` = crossProject.crossType(CrossType.Pure)
       libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
     )
     
-lazy val `foundation-runtime-pure` = `cross-project-container`.jvm
-lazy val foundationRuntimePureJS = `cross-project-container`.js
+lazy val foundationRuntimePureJVM = foundationRuntimePure.jvm
+lazy val foundationRuntimePureJS = foundationRuntimePure.js
   
   
 val commonSettings = Seq(
@@ -77,6 +83,7 @@ val publishingSettings = Seq(
 )
 
 val eclipseSettings = Seq(
-  EclipseKeys.withSource := true,
-  EclipseKeys.useProjectId := true
+  EclipseKeys.withSource := true
+  //,
+  //EclipseKeys.useProjectId := true
 )
