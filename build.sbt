@@ -31,15 +31,6 @@ val commonSettings = Seq(
 //  unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
 )
 
-/*
-val noPublishingSettings = Seq(
-  publish := {},
-  publishLocal := {},
-  publishArtifact := false,
-  publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
-)
-*/
-
 val publishingSettings = Seq(
 //useGpg := true,
   homepage   := Some(url("https://github.com/isomorf-org/scala-foundation-runtime-pure")),
@@ -78,7 +69,8 @@ val publishingSettings = Seq(
     releaseStepCommandAndRemaining("+publishArtifacts"),
     setNextVersion,
     commitNextVersion,
-    releaseStepCommand("sonatypeReleaseAll"),
+    //releaseStepCommand("sonatypeReleaseAll"),
+    ReleaseStep(action = "sonatypeReleaseAll" :: _),
     pushChanges
   )
 )
