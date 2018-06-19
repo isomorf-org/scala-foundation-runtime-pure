@@ -75,7 +75,7 @@ val publishingSettings = Seq(
     commitReleaseVersion,
     tagRelease,
     //publishArtifacts,
-    releaseStepCommandAndRemaining("+publishArtifacts")
+    releaseStepCommandAndRemaining("+publishArtifacts"),
     setNextVersion,
     commitNextVersion,
     releaseStepCommand("sonatypeReleaseAll"),
