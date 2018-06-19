@@ -10,7 +10,7 @@
 .project
 .settings
 bin/
-cross-project-container
+foundationRuntimePure
 hs_err_pid*.log
 project/project
 project/target

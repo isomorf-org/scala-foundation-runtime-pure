@@ -17,12 +17,15 @@ lazy val foundationRuntimePure = crossProject(JSPlatform, JVMPlatform)
     )
     
 lazy val foundationRuntimePureJVM = foundationRuntimePure.jvm
+
 lazy val foundationRuntimePureJS = foundationRuntimePure.js
 
 crossScalaVersions := Seq("2.11.11", "2.12.3")
+
+val organizationGlobal = "org.isomorf"
   
 val commonSettings = Seq(
-  organization := "org.isomorf",
+  organization := organizationGlobal,
   name         := "foundation-runtime-pure",
   scalaVersion := "2.12.3",
   scalacOptions := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xlint:_", "-Ywarn-unused-import"),
@@ -83,3 +86,7 @@ val eclipseSettings = Seq(
 )
 
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
+
+commands += Command.command("releaser") {
+  "release cross" :: s"sonatypeReleaseAll ${organizationGlobal}" :: _
+}
