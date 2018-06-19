@@ -4,10 +4,6 @@ import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 
 import ReleaseTransformations._
-
-//lazy val root = (project in file("."))
-//    .aggregate(`foundation-runtime-pure`, foundationRuntimePureJS)
-//    .settings(noPublishingSettings: _*)
     
 lazy val foundationRuntimePure = crossProject(JSPlatform, JVMPlatform)
     .withoutSuffixFor(JVMPlatform)
@@ -40,6 +36,7 @@ val noPublishingSettings = Seq(
 )
 
 val publishingSettings = Seq(
+//useGpg := true,
   homepage   := Some(url("https://github.com/isomorf-org/scala-foundation-runtime-pure")),
   scmInfo    := Some(ScmInfo(url("https://github.com/isomorf-org/scala-foundation-runtime-pure"),
                               "git@github.com:isomorf-org/scala-foundation-runtime-pure.git")),
@@ -49,20 +46,9 @@ val publishingSettings = Seq(
 
   pomIncludeRepository := { _ => false },
 
-  publishMavenStyle := true
+  publishMavenStyle := true,
   
-  
-  
-  //useGpg := true
-)
-
-val eclipseSettings = Seq(
-  EclipseKeys.withSource := true
-  //,
-  //EclipseKeys.useProjectId := true
-)
-
-// Add sonatype repository settings
+  // Add sonatype repository settings
   publishTo := Some(
     if (isSnapshot.value) {
       Opts.resolver.sonatypeSnapshots
@@ -70,10 +56,10 @@ val eclipseSettings = Seq(
     else {
       Opts.resolver.sonatypeStaging
     }
-  )
+  ),
   
   
-  releaseCrossBuild := true
+  releaseCrossBuild := true,
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
@@ -89,3 +75,12 @@ val eclipseSettings = Seq(
     releaseStepCommand("sonatypeReleaseAll"),
     pushChanges
   )
+)
+
+val eclipseSettings = Seq(
+  EclipseKeys.withSource := true
+  //,
+  //EclipseKeys.useProjectId := true
+)
+
+publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
