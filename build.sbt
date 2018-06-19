@@ -5,7 +5,9 @@ lazy val root = (project in file("."))
     .aggregate(`foundation-runtime-pure`, foundationRuntimePureJS)
     .settings(
       publish := {},
-      publishLocal := {}
+      publishLocal := {},
+      publishArtifact := false,
+      publishSigned := ()
     )
     
 lazy val `cross-project-container` = crossProject.crossType(CrossType.Pure)
@@ -28,11 +30,7 @@ val commonSettings = Seq(
   unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil,
   unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
 )
-  
-val noPublishingSettings = Seq(
-  publishArtifact := false,
-  publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
-)
+
 
 val publishingSettings = Seq(
   homepage   := Some(url("https://github.com/isomorf-org/scala-foundation-runtime-pure")),
@@ -46,7 +44,18 @@ val publishingSettings = Seq(
 
   publishMavenStyle := true,
 
-  // Add sonatype repository settings
+  
+  
+  //useGpg := true
+)
+
+val eclipseSettings = Seq(
+  EclipseKeys.withSource := true,
+  EclipseKeys.useProjectId := true
+)
+
+
+// Add sonatype repository settings
   publishTo := Some(
     if (isSnapshot.value) {
       Opts.resolver.sonatypeSnapshots
@@ -54,7 +63,7 @@ val publishingSettings = Seq(
     else {
       Opts.resolver.sonatypeStaging
     }
-  ),
+  )
   
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
@@ -70,12 +79,3 @@ val publishingSettings = Seq(
     releaseStepCommand("sonatypeReleaseAll"),
     pushChanges
   )
-  
-  //useGpg := true
-)
-
-val eclipseSettings = Seq(
-  EclipseKeys.withSource := true,
-  EclipseKeys.useProjectId := true
-)
-
