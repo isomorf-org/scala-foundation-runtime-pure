@@ -41,9 +41,17 @@ val publishingSettings = Seq(
 
   pomIncludeRepository := { _ => false },
 
-  publishMavenStyle := true
-
+  publishMavenStyle := true,
   
+  // Add sonatype repository settings
+  publishTo := Some(
+    if (isSnapshot.value) {
+      Opts.resolver.sonatypeSnapshots
+    }
+    else {
+      Opts.resolver.sonatypeStaging
+    }
+  )
   
   //useGpg := true
 )
@@ -54,15 +62,7 @@ val eclipseSettings = Seq(
 )
 
 
-// Add sonatype repository settings
-  publishTo := Some(
-    if (isSnapshot.value) {
-      Opts.resolver.sonatypeSnapshots
-    }
-    else {
-      Opts.resolver.sonatypeStaging
-    }
-  )
+
   
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
