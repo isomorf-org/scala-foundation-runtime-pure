@@ -1,4 +1,6 @@
 
+import ReleaseTransformations._
+
 lazy val root = (project in file("."))
     .aggregate(`foundation-runtime-pure`, foundationRuntimePureJS)
     .settings(
@@ -52,6 +54,21 @@ val publishingSettings = Seq(
     else {
       Opts.resolver.sonatypeStaging
     }
+  ),
+  
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    releaseStepCommand("publishSigned"),
+    setNextVersion,
+    commitNextVersion,
+    releaseStepCommand("sonatypeReleaseAll"),
+    pushChanges
   )
   
   //useGpg := true
@@ -60,22 +77,5 @@ val publishingSettings = Seq(
 val eclipseSettings = Seq(
   EclipseKeys.withSource := true,
   EclipseKeys.useProjectId := true
-)
-
-
-import ReleaseTransformations._
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  releaseStepCommand("publishSigned"),
-  setNextVersion,
-  commitNextVersion,
-  releaseStepCommand("sonatypeReleaseAll"),
-  pushChanges
 )
 
