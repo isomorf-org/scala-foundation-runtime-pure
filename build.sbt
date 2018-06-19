@@ -29,8 +29,7 @@ val commonSettings = Seq(
 val noPublishingSettings = Seq(
   publish := {},
   publishLocal := {},
-  publishArtifact := false,
-  publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
+  publishArtifact := false
 )
 
 val publishingSettings = Seq(
@@ -63,7 +62,8 @@ val publishingSettings = Seq(
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
-    releaseStepCommand("publishSigned"),
+    //releaseStepCommand("publishSigned"),
+    releaseStepCommandAndRemaining("+publishSigned"),
     setNextVersion,
     commitNextVersion,
     releaseStepCommand("sonatypeReleaseAll"),
