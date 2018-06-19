@@ -25,17 +25,20 @@ val commonSettings = Seq(
   name         := "foundation-runtime-pure",
   scalaVersion := "2.12.3",
   scalacOptions := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xlint:_", "-Ywarn-unused-import"),
-  crossScalaVersions := Seq("2.11.11", "2.12.3"),
-  unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil,
-  unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
+  crossScalaVersions := Seq("2.11.11", "2.12.3")
+//  ,
+//  unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil,
+//  unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
 )
 
+/*
 val noPublishingSettings = Seq(
   publish := {},
   publishLocal := {},
   publishArtifact := false,
   publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 )
+*/
 
 val publishingSettings = Seq(
 //useGpg := true,
@@ -85,4 +88,4 @@ val eclipseSettings = Seq(
   //EclipseKeys.useProjectId := true
 )
 
-//publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
+publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
