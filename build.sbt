@@ -5,7 +5,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 import com.typesafe.sbt.pgp.PgpKeys.publishSigned
 
 import ReleaseTransformations._
-    
+
 lazy val foundationRuntimePure = crossProject(JSPlatform, JVMPlatform)
     .withoutSuffixFor(JVMPlatform)
     .crossType(CrossType.Pure)
@@ -90,3 +90,9 @@ publishTo := Some(Resolver.file("Unused transient repository", file("target/unus
 commands += Command.command("releaser") {
   "release cross" :: s"sonatypeReleaseAll ${organizationGlobal}" :: _
 }
+
+enablePlugins(SiteScaladocPlugin)
+
+val currentVersion = "0.5.1"
+
+siteSubdirName in SiteScaladoc := "api/" + currentVersion
