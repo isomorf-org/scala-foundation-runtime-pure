@@ -135,17 +135,19 @@ copyScaladocs := {
   val srcDir = siteDirectory.value.toPath.resolve((SiteScaladoc / siteSubdirName).value)
   val destDir = baseDirectory.value.toPath.resolve(ghDocsDirName).resolve((SiteScaladoc / siteSubdirName).value)
   
-  Files.walkFileTree(destDir, new SimpleFileVisitor[Path]() {
-    override def visitFile(file: Path, attrs: BasicFileAttributes) = {
-       Files.delete(file)
-       FileVisitResult.CONTINUE
-    }
+  if(Files.exists(destDir)) {
+    Files.walkFileTree(destDir, new SimpleFileVisitor[Path]() {
+      override def visitFile(file: Path, attrs: BasicFileAttributes) = {
+         Files.delete(file)
+         FileVisitResult.CONTINUE
+      }
 
-    override def postVisitDirectory(dir: Path, exc: java.io.IOException) = {
-      Files.delete(dir)
-      FileVisitResult.CONTINUE
-   }
-  })
+      override def postVisitDirectory(dir: Path, exc: java.io.IOException) = {
+        Files.delete(dir)
+        FileVisitResult.CONTINUE
+      }
+    })
+  }
   
   Files.createDirectories(destDir)
   
