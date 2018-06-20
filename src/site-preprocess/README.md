@@ -10,4 +10,4 @@ libraryDependencies += "org.isomorf" %% "foundation-runtime-pure" % "@VERSION@"
 
 ## Documentation
 
-[scaladocs](http://isomorf-org.github.io/scala-foundation-runtime-pure/scaladocs/api/@VERSION@)
+[scaladocs](http://isomorf-org.github.io/scala-foundation-runtime-pure/scaladocs/api/@VERSION@/org/isomorf/foundation/runtime/index.html)
