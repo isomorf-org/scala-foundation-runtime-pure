@@ -1,3 +1,6 @@
+
+[//]: # (NOTE: do not edit `README.md` in root, only edit from `src/site-preprocess/README.md`)
+
 # foundation-runtime-pure
 
 ## Installation
