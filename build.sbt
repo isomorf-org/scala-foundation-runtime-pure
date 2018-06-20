@@ -113,12 +113,16 @@ preprocessVars in Preprocess := Map("VERSION" -> version.value)
 
 lazy val copyReadme = taskKey[Unit]("copies preprocessed readme")
 
+val readmeName = "README.md"
+
+val ghDocsDirName = "docs"
+
 copyReadme := {
   import java.nio.file.Paths
   import java.nio.file.Files
   import java.nio.file.StandardCopyOption
-  val src = target.value.toPath.resolve("site/README.md")
-  val dest = baseDirectory.value.toPath.resolve("README.md")
+  val src = siteDirectory.value.toPath.resolve(readmeName)
+  val dest = baseDirectory.value.toPath.resolve(readmeName)
   Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING)
 }
 
@@ -126,13 +130,25 @@ copyReadme := {
 lazy val copyScaladocs = taskKey[Unit]("copies scaladocs")
 
 copyScaladocs := {
-  import java.nio.file.Paths
-  import java.nio.file.Files
-  import java.nio.file.StandardCopyOption
-  val srcDir = target.value.toPath.resolve("site").resolve((SiteScaladoc / siteSubdirName).value)
-  val destDir = baseDirectory.value.toPath.resolve("docs").resolve((SiteScaladoc / siteSubdirName).value)
+  import java.nio.file._
+  import java.nio.file.attribute._
+  val srcDir = siteDirectory.value.toPath.resolve((SiteScaladoc / siteSubdirName).value)
+  val destDir = baseDirectory.value.toPath.resolve(ghDocsDirName).resolve((SiteScaladoc / siteSubdirName).value)
+  
+  Files.walkFileTree(destDir, new SimpleFileVisitor[Path]() {
+    override def visitFile(file: Path, attrs: BasicFileAttributes) = {
+       Files.delete(file)
+       FileVisitResult.CONTINUE
+    }
+
+    override def postVisitDirectory(dir: Path, exc: java.io.IOException) = {
+      Files.delete(dir)
+      FileVisitResult.CONTINUE
+   }
+  })
   
   Files.createDirectories(destDir)
+  
   Files.walk(srcDir).forEach({ src => 
     val dest = destDir.resolve(srcDir.relativize(src))
     Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING)
