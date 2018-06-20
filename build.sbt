@@ -20,16 +20,22 @@ lazy val foundationRuntimePureJVM = foundationRuntimePure.jvm
 
 lazy val foundationRuntimePureJS = foundationRuntimePure.js
 
-crossScalaVersions := Seq("2.11.11", "2.12.3")
-
 val organizationGlobal = "org.isomorf"
+
+val scalaVersionGlobal = "2.12.3"
+
+val crossScalaVersionsGlobal = Seq("2.11.11", scalaVersionGlobal)
+
+crossScalaVersions := crossScalaVersionsGlobal
+
+
   
 val commonSettings = Seq(
   organization := organizationGlobal,
   name         := "foundation-runtime-pure",
-  scalaVersion := "2.12.3",
+  scalaVersion := scalaVersionGlobal,
   scalacOptions := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xlint:_", "-Ywarn-unused-import"),
-  crossScalaVersions := Seq("2.11.11", "2.12.3")
+  crossScalaVersions := crossScalaVersionsGlobal
 //  ,
 //  unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil,
 //  unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
@@ -71,10 +77,10 @@ val publishingSettings = Seq(
     tagRelease,
     //publishArtifacts,
     releaseStepCommandAndRemaining("+publishArtifacts"),
+    releaseStepCommand("makeDocs"),
     setNextVersion,
     commitNextVersion,
-    //releaseStepCommand("sonatypeReleaseAll"),
-    ReleaseStep(action = "sonatypeReleaseAll" :: _),
+    releaseStepCommand(s"sonatypeReleaseAll ${organizationGlobal}"),
     pushChanges
   )
 )
@@ -88,11 +94,51 @@ val eclipseSettings = Seq(
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
 commands += Command.command("releaser") {
-  "release cross" :: s"sonatypeReleaseAll ${organizationGlobal}" :: _
+  "release cross" :: 
+  //s"sonatypeReleaseAll ${organizationGlobal}" ::
+   _
+}
+
+commands += Command.command("makeDocs") {
+  "makeSite" :: "copyReadme" :: "copyScaladocs" ::  _
 }
 
 enablePlugins(SiteScaladocPlugin)
 
-val currentVersion = "0.5.1"
+siteSubdirName in SiteScaladoc := "scaladocs/api/" + version.value
 
-siteSubdirName in SiteScaladoc := "api/" + currentVersion
+enablePlugins(PreprocessPlugin)
+
+preprocessVars in Preprocess := Map("VERSION" -> version.value)
+
+lazy val copyReadme = taskKey[Unit]("copies preprocessed readme")
+
+copyReadme := {
+  import java.nio.file.Paths
+  import java.nio.file.Files
+  import java.nio.file.StandardCopyOption
+  val src = target.value.toPath.resolve("site/README.md")
+  val dest = baseDirectory.value.toPath.resolve("README.md")
+  Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING)
+}
+
+
+lazy val copyScaladocs = taskKey[Unit]("copies scaladocs")
+
+copyScaladocs := {
+  import java.nio.file.Paths
+  import java.nio.file.Files
+  import java.nio.file.StandardCopyOption
+  val srcDir = target.value.toPath.resolve("site").resolve((SiteScaladoc / siteSubdirName).value)
+  val destDir = baseDirectory.value.toPath.resolve("docs").resolve((SiteScaladoc / siteSubdirName).value)
+  
+  Files.createDirectories(destDir)
+  Files.walk(srcDir).forEach({ src => 
+    val dest = destDir.resolve(srcDir.relativize(src))
+    Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING)
+  })
+  
+}
+
+
+
