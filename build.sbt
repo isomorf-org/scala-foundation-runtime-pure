@@ -100,7 +100,7 @@ commands += Command.command("releaser") {
 }
 
 commands += Command.command("makeDocs") {
-  "makeSite" :: "copyReadme" :: "copyScaladocs" ::  _
+  "makeSite" :: "ghdvCopyReadme" :: "ghdvCopyScaladocs" ::  _
 }
 
 enablePlugins(SiteScaladocPlugin)
@@ -109,54 +109,6 @@ siteSubdirName in SiteScaladoc := "scaladocs/api/" + version.value
 
 enablePlugins(PreprocessPlugin)
 
+enablePlugins(SbtGhDocVerPlugin)
+
 preprocessVars in Preprocess := Map("VERSION" -> version.value)
-
-lazy val copyReadme = taskKey[Unit]("copies preprocessed readme")
-
-val readmeName = "README.md"
-
-val ghDocsDirName = "docs"
-
-copyReadme := {
-  import java.nio.file.Paths
-  import java.nio.file.Files
-  import java.nio.file.StandardCopyOption
-  val src = siteDirectory.value.toPath.resolve(readmeName)
-  val dest = baseDirectory.value.toPath.resolve(readmeName)
-  Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING)
-}
-
-
-lazy val copyScaladocs = taskKey[Unit]("copies scaladocs")
-
-copyScaladocs := {
-  import java.nio.file._
-  import java.nio.file.attribute._
-  val srcDir = siteDirectory.value.toPath.resolve((SiteScaladoc / siteSubdirName).value)
-  val destDir = baseDirectory.value.toPath.resolve(ghDocsDirName).resolve((SiteScaladoc / siteSubdirName).value)
-  
-  if(Files.exists(destDir)) {
-    Files.walkFileTree(destDir, new SimpleFileVisitor[Path]() {
-      override def visitFile(file: Path, attrs: BasicFileAttributes) = {
-         Files.delete(file)
-         FileVisitResult.CONTINUE
-      }
-
-      override def postVisitDirectory(dir: Path, exc: java.io.IOException) = {
-        Files.delete(dir)
-        FileVisitResult.CONTINUE
-      }
-    })
-  }
-  
-  Files.createDirectories(destDir)
-  
-  Files.walk(srcDir).forEach({ src => 
-    val dest = destDir.resolve(srcDir.relativize(src))
-    Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING)
-  })
-  
-}
-
-
-

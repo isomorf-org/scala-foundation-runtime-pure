@@ -7,3 +7,5 @@ addSbtPlugin("org.xerial.sbt"          % "sbt-sonatype"             % "2.3")
 addSbtPlugin("org.scala-js"            % "sbt-scalajs"              % "0.6.23")
 addSbtPlugin("org.portable-scala"      % "sbt-scalajs-crossproject" % "0.5.0")
 addSbtPlugin("com.typesafe.sbt"        % "sbt-site"                 % "1.3.2")
+
+addSbtPlugin("com.github.bdkent"       % "sbt-ghdocver"             % "0.1.1")
