@@ -2,6 +2,8 @@
 // shadow sbt-scalajs' crossProject and CrossType from Scala.js 0.6.x
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
+enablePlugins(ScalaJSPlugin)
+
 import com.typesafe.sbt.pgp.PgpKeys.publishSigned
 
 import ReleaseTransformations._
@@ -9,6 +11,7 @@ import ReleaseTransformations._
 lazy val foundationRuntimePure = crossProject(JSPlatform, JVMPlatform)
     .withoutSuffixFor(JVMPlatform)
     .crossType(CrossType.Pure)
+    .in(file("."))
     .settings(commonSettings: _*)
     .settings(publishingSettings: _*)
     .jvmSettings(eclipseSettings: _*)
