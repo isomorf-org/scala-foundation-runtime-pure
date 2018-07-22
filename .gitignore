@@ -3,8 +3,10 @@
 **/.cache-main
 **/.cache-tests
 **/.worksheet
-.cache
-.classpath
+**/.jvm
+**/.js
+**/.cache
+**/.classpath
 .history
 .idea
 .project
