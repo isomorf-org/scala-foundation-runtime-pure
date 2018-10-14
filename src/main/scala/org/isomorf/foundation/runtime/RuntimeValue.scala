@@ -1,6 +1,9 @@
 package org.isomorf.foundation.runtime
 
+import scala.concurrent.Future
 import scala.util.Try
+
+import monix.eval.Task
 
 sealed trait RTValue
 
@@ -54,15 +57,35 @@ object RTPure {
 ///////////
 
 sealed trait RTEffect[A] extends RTValue {
-  def effect(): Try[A]
+  def effect(): Task[A]
+  def map[B](f: A => B): RTEffect[B]
+  def flatMap[B](f: A => RTEffect[B]): RTEffect[B]
 }
 
 object RTEffect {
-  final def apply[A](e: => Try[A]): RTEffect[A] = {
-    new RTEffect[A] {
-      final override def effect: Try[A] = {
-        e
-      }
-    }
+  private case class Impl[A](t: Task[A]) extends RTEffect[A] {
+    def effect(): Task[A] = t
+    def map[B](f: A => B): RTEffect[B] = RTEffect(t.map(f))
+    def flatMap[B](f: A => RTEffect[B]): RTEffect[B] = RTEffect(t.flatMap(f(_).effect()))
+  }
+
+  def apply[A](t: Task[A]): RTEffect[A] = {
+    Impl(t)
+  }
+
+  def apply[A](f: Future[A]): RTEffect[A] = {
+    Impl(Task.fromFuture(f))
+  }
+
+  def apply[A](e: RTEffect[A]): RTEffect[A] = {
+    e
+  }
+
+  def apply[A](t: Try[A]): RTEffect[A] = {
+    Impl(Task.fromTry(t))
+  }
+
+  def apply[A](any: A): RTEffect[A] = {
+    Impl(Task.eval(any))
   }
 }
